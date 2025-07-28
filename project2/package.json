@@ -1,16 +1,17 @@
 {
-  "name": "project2",
+  "name": "businessflow-crm",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "tsc && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-router-dom": "^6.8.1",
     "lucide-react": "^0.263.1"
   },
   "devDependencies": {
