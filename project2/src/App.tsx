@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { BrowserRouter as Router } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
 import Dashboard from './components/Dashboard';
 import Customers from './components/Customers';
@@ -27,12 +28,14 @@ function App() {
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-100">
-      <Sidebar activeTab={activeTab} onTabChange={setActiveTab} />
-      <main className="flex-1 p-8">
-        {renderContent()}
-      </main>
-    </div>
+    <Router>
+      <div className="flex min-h-screen bg-gray-100">
+        <Sidebar activeTab={activeTab} onTabChange={setActiveTab} />
+        <main className="flex-1 p-8">
+          {renderContent()}
+        </main>
+      </div>
+    </Router>
   );
 }
 
