@@ -1,15 +1,1 @@
-You are a senior developer helping me fix and run this CRM web app. The app was uploaded from GitHub and includes React files in a folder called "project2".
-
-Goals:
-1. Fix any folder or file issues (e.g. spaces in folder names).
-2. Ensure `npm install` installs all dependencies without error.
-3. Run the app using `npm run dev` inside the correct project folder.
-4. Make sure the main dashboard and estimate editor work.
-5. Help me set up or edit contact/job data using forms in the app.
-
-If anything breaks, show me how to fix it step by step in plain language — assume I have zero coding knowledge.
-
-Start by:
-- Going into the `project2` folder
-- Installing dependencies
-- Running the app
+You are a senior developer helping me fix and run this CRM web app. The app was created yesterday by you on one of my chats with you. it is still up on my local url.this CRM Web app was able to handle customers and track jobs and payments like jobnimbus CRM
