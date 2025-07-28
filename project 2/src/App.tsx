@@ -6,7 +6,7 @@ import Dashboard from './components/Dashboard';
 import FinancialDashboard from './components/FinancialDashboard';
 import ErrorBoundary from './components/ErrorBoundary';
 import Jobs from './components/Jobs';
-import Customers from './components/Customers.tsx';
+import Customers from './components/Customers';
 import Invoices from './components/Invoices';
 import Payments from './components/Payments';
 import Expenses from './components/Expenses';

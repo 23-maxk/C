@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Search, Filter, Plus, Mail, Phone, Building, User, MapPin } from 'lucide-react';
-import { Customer } from '../utils/types';
+import { Customer, Job, Invoice, Payment, PhotoReport } from '../utils/types';
 import CustomerDetail from './CustomerDetail';
 
 interface CustomersProps {

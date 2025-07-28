@@ -12,9 +12,10 @@ import {
   User,
   Mail,
   Phone,
-  MapPin
+  MapPin,
+  Briefcase
 } from 'lucide-react';
-import { DashboardStats, BankAccount, BankTransaction, Expense, Payment, AutomationRule, Customer } from '../utils/types';
+import { DashboardStats, BankAccount, BankTransaction, Expense, Payment, AutomationRule, Customer, Job, Invoice } from '../utils/types';
 
 interface DashboardProps {
   stats: DashboardStats;

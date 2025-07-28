@@ -1,5 +1,5 @@
 import { Customer, Job, Invoice, Payment, Expense, BankAccount, BankTransaction, Note, DashboardStats } from './types';
-import { FinancialStats, AutomationRule, RecurringTransaction } from './types';
+import { FinancialStats, AutomationRule, RecurringTransaction, Product, Settings, Estimate, CalendarEvent, PhotoReport } from './types';
 
 export const mockCustomers: Customer[] = [
   {

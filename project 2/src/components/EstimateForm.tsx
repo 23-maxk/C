@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { X, Save, Plus, Trash2, Calculator, FileText, Mail } from 'lucide-react';
-import { Estimate, EstimateItem, Customer, Product } from '../utils/types';
+import { Estimate, EstimateItem, Customer, Product, Settings } from '../utils/types';
 
 interface EstimateFormProps {
   isOpen: boolean;
