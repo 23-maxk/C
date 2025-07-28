@@ -23,6 +23,7 @@ import BankConnectionModal from './components/BankConnectionModal';
 import AutomationRuleModal from './components/AutomationRuleModal';
 import MetricModal from './components/MetricModal';
 import EstimatePublicView from './components/EstimatePublicView';
+import EstimatePublicViewWrapper from './components/EstimatePublicViewWrapper';
 import { 
   mockCustomers, 
   mockJobs, 
@@ -58,7 +59,7 @@ function AppRoutes() {
       <Route path="/dashboard" element={<AppContent />} />
       <Route path="/customers/new" element={<CustomerFormPage />} />
       <Route path="/customers/:id" element={<CustomerProfilePage />} />
-      <Route path="/e/:token" element={<EstimatePublicView />} />
+      <Route path="/e/:token" element={<EstimatePublicViewWrapper />} />
       <Route path="/*" element={<AppContent />} />
     </Routes>
   );
