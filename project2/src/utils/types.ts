@@ -107,68 +107,6 @@ export interface Expense {
   nextDueDate?: Date;
 }
 
-export interface BankTransaction {
-  id: string;
-  accountId: string;
-  amount: number;
-  type: 'debit' | 'credit';
-  description: string;
-  date: Date;
-  category?: string;
-  matched: boolean;
-  matchedExpenseId?: string;
-  matchedPaymentId?: string;
-  isAutomated?: boolean;
-  automationRuleId?: string;
-}
-
-export interface BankAccount {
-  id: string;
-  name: string;
-  type: 'checking' | 'savings' | 'credit';
-  balance: number;
-  lastSynced: Date;
-  isActive: boolean;
-  accountNumber?: string;
-  routingNumber?: string;
-  isConnected: boolean;
-}
-
-export interface AutomationRule {
-  id: string;
-  name: string;
-  description: string;
-  isActive: boolean;
-  conditions: {
-    amountMin?: number;
-    amountMax?: number;
-    descriptionContains?: string;
-    vendor?: string;
-    transactionType: 'debit' | 'credit' | 'both';
-  };
-  actions: {
-    category: string;
-    createExpense: boolean;
-    assignToJob?: string;
-    notes?: string;
-  };
-  createdAt: Date;
-}
-
-export interface RecurringTransaction {
-  id: string;
-  name: string;
-  description: string;
-  amount: number;
-  category: string;
-  frequency: 'weekly' | 'monthly' | 'quarterly' | 'yearly';
-  nextDate: Date;
-  isActive: boolean;
-  bankAccountId: string;
-  type: 'expense' | 'income';
-  createdAt: Date;
-}
-
 export interface Note {
   id: string;
   entityId: string; // Can be customerId, jobId, etc.
@@ -178,56 +116,6 @@ export interface Note {
   tags: string[];
   type: 'note' | 'call' | 'meeting' | 'email';
   createdBy?: string;
-}
-
-export interface DashboardStats {
-  totalRevenue: number;
-  monthlyRevenue: number;
-  pendingInvoices: number;
-  activeJobs: number;
-  totalCustomers: number;
-  cashFlow: number;
-  profitMargin: number;
-  netProfit: number;
-  totalExpenses: number;
-  bankBalance: number;
-}
-
-export interface FinancialStats {
-  totalIncome: number;
-  totalExpenses: number;
-  netProfit: number;
-  profitMargin: number;
-  cashFlow: number;
-  accountsReceivable: number;
-  accountsPayable: number;
-  bankBalance: number;
-  monthlyTrend: {
-    month: string;
-    income: number;
-    expenses: number;
-    profit: number;
-  }[];
-  expensesByCategory: {
-    category: string;
-    amount: number;
-    percentage: number;
-  }[];
-}
-
-export interface FinancialReport {
-  period: {
-    start: Date;
-    end: Date;
-  };
-  revenue: number;
-  expenses: number;
-  profit: number;
-  profitMargin: number;
-  categoryBreakdown: {
-    category: string;
-    amount: number;
-  }[];
 }
 
 export interface Product {
