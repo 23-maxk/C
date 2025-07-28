@@ -1,225 +1,148 @@
 import React, { useState } from 'react';
-import { Search, Filter, Plus, Calendar, DollarSign, User, Clock } from 'lucide-react';
-import { Job, Customer } from '../utils/types';
+import { Briefcase, Plus, Search, Clock, DollarSign, User, Calendar } from 'lucide-react';
+import { mockJobs, mockCustomers } from '../utils/data';
+import { Job } from '../types';
 
-interface JobsProps {
-  jobs: Job[];
-  customers: Customer[];
-  onNewJob: () => void;
-  onEditJob: (job: Job) => void;
-}
-
-const Jobs: React.FC<JobsProps> = ({ jobs, customers, onNewJob, onEditJob }) => {
+const Jobs: React.FC = () => {
+  const [jobs] = useState<Job[]>(mockJobs);
   const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState<'all' | Job['status']>('all');
-  const [priorityFilter, setPriorityFilter] = useState<'all' | Job['priority']>('all');
+  const [statusFilter, setStatusFilter] = useState<string>('all');
 
   const filteredJobs = jobs.filter(job => {
     const matchesSearch = job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         job.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          job.description.toLowerCase().includes(searchTerm.toLowerCase());
-    
     const matchesStatus = statusFilter === 'all' || job.status === statusFilter;
-    const matchesPriority = priorityFilter === 'all' || job.priority === priorityFilter;
-    
-    return matchesSearch && matchesStatus && matchesPriority;
+    return matchesSearch && matchesStatus;
   });
 
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD'
-    }).format(amount);
-  };
-
-  const formatDate = (date?: Date) => {
-    if (!date) return 'Not set';
-    return new Intl.DateTimeFormat('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric'
-    }).format(date);
-  };
-
-  const getStatusColor = (status: Job['status']) => {
+  const getStatusColor = (status: string) => {
     switch (status) {
-      case 'completed': return 'text-emerald-600 bg-emerald-100 dark:text-emerald-400 dark:bg-emerald-500/20';
-      case 'in-progress': return 'text-blue-600 bg-blue-100 dark:text-blue-400 dark:bg-blue-500/20';
-      case 'scheduled': return 'text-amber-600 bg-amber-100 dark:text-amber-400 dark:bg-amber-500/20';
-      case 'quoted': return 'text-purple-600 bg-purple-100 dark:text-purple-400 dark:bg-purple-500/20';
-      case 'lead': return 'text-gray-600 bg-gray-100 dark:text-gray-400 dark:bg-gray-500/20';
-      case 'cancelled': return 'text-red-600 bg-red-100 dark:text-red-400 dark:bg-red-500/20';
-      default: return 'text-gray-600 bg-gray-100 dark:text-gray-400 dark:bg-gray-500/20';
-    }
-  };
-
-  const getPriorityColor = (priority: Job['priority']) => {
-    switch (priority) {
-      case 'urgent': return 'text-red-600 bg-red-100 dark:text-red-400 dark:bg-red-500/20';
-      case 'high': return 'text-orange-600 bg-orange-100 dark:text-orange-400 dark:bg-orange-500/20';
-      case 'medium': return 'text-yellow-600 bg-yellow-100 dark:text-yellow-400 dark:bg-yellow-500/20';
-      case 'low': return 'text-green-600 bg-green-100 dark:text-green-400 dark:bg-green-500/20';
-      default: return 'text-gray-600 bg-gray-100 dark:text-gray-400 dark:bg-gray-500/20';
+      case 'completed':
+        return 'bg-green-100 text-green-800';
+      case 'in-progress':
+        return 'bg-blue-100 text-blue-800';
+      case 'pending':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'cancelled':
+        return 'bg-red-100 text-red-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
     }
   };
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
+      <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">Jobs</h2>
-          <p className="text-gray-600 dark:text-gray-400">Manage your projects and work orders</p>
+          <h1 className="text-3xl font-bold text-gray-900">Jobs</h1>
+          <p className="text-gray-600 mt-2">Track and manage all your projects</p>
         </div>
-        <button
-          onClick={onNewJob}
-          className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full transition-all duration-200 hover:scale-105 hover:shadow-lg hover:shadow-blue-600/25"
-        >
-          <Plus className="w-4 h-4" />
-          <span>New Job</span>
+        <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center transition-colors">
+          <Plus className="w-4 h-4 mr-2" />
+          Create Job
         </button>
       </div>
 
-      {/* Search and Filters */}
-      <div className="flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-4">
-        <div className="flex-1 relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-          <input
-            type="text"
-            placeholder="Search jobs, customers, or descriptions..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-3 bg-white/50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-          />
-        </div>
-        
-        <div className="flex items-center space-x-4">
-          <div className="flex items-center space-x-2">
-            <Filter className="w-5 h-5 text-gray-500 dark:text-gray-400" />
-            <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value as any)}
-              className="bg-white/50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            >
-              <option value="all">All Status</option>
-              <option value="lead">Lead</option>
-              <option value="quoted">Quoted</option>
-              <option value="scheduled">Scheduled</option>
-              <option value="in-progress">In Progress</option>
-              <option value="completed">Completed</option>
-              <option value="cancelled">Cancelled</option>
-            </select>
+      {/* Filters */}
+      <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <input
+              type="text"
+              placeholder="Search jobs..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
           </div>
-          
           <select
-            value={priorityFilter}
-            onChange={(e) => setPriorityFilter(e.target.value as any)}
-            className="bg-white/50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           >
-            <option value="all">All Priority</option>
-            <option value="urgent">Urgent</option>
-            <option value="high">High</option>
-            <option value="medium">Medium</option>
-            <option value="low">Low</option>
+            <option value="all">All Status</option>
+            <option value="pending">Pending</option>
+            <option value="in-progress">In Progress</option>
+            <option value="completed">Completed</option>
+            <option value="cancelled">Cancelled</option>
           </select>
         </div>
       </div>
 
       {/* Jobs Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-        {filteredJobs.map((job) => (
-          <div
-            key={job.id}
-            className="bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm border border-gray-200 dark:border-gray-800 rounded-2xl p-6 hover:bg-gray-50 dark:hover:bg-gray-800/50 hover:border-gray-300 dark:hover:border-gray-700 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-blue-600/10"
-          >
-            {/* Header */}
-            <div className="flex items-start justify-between mb-4">
-              <div className="flex-1">
-                <h3 className="font-semibold text-lg text-gray-900 dark:text-white mb-1 line-clamp-2">
-                  {job.title}
-                </h3>
-                <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
-                  <User className="w-4 h-4" />
-                  <span>{job.customerName}</span>
+        {filteredJobs.map((job) => {
+          const customer = mockCustomers.find(c => c.id === job.customerId);
+          const totalValue = job.estimatedHours * job.hourlyRate;
+          
+          return (
+            <div key={job.id} className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
+              <div className="flex items-start justify-between mb-4">
+                <div className="flex-1">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">{job.title}</h3>
+                  <p className="text-gray-600 text-sm mb-3 line-clamp-2">{job.description}</p>
                 </div>
-              </div>
-              <div className="flex flex-col space-y-2">
-                <span className={`px-2 py-1 text-xs rounded-full ${getStatusColor(job.status)}`}>
-                  {job.status.replace('-', ' ')}
-                </span>
-                <span className={`px-2 py-1 text-xs rounded-full ${getPriorityColor(job.priority)}`}>
-                  {job.priority}
+                <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(job.status)}`}>
+                  {job.status}
                 </span>
               </div>
-            </div>
 
-            {/* Description */}
-            <p className="text-gray-700 dark:text-gray-300 text-sm mb-4 line-clamp-2">
-              {job.description}
-            </p>
-
-            {/* Value */}
-            <div className="flex items-center space-x-2 mb-4">
-              <DollarSign className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-              <span className="font-semibold text-gray-900 dark:text-white">
-                {formatCurrency(job.actualValue || job.estimatedValue)}
-              </span>
-              {job.actualValue && job.actualValue !== job.estimatedValue && (
-                <span className="text-sm text-gray-500 dark:text-gray-500 line-through">
-                  {formatCurrency(job.estimatedValue)}
-                </span>
-              )}
-            </div>
-
-            {/* Dates */}
-            <div className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-              {job.startDate && (
-                <div className="flex items-center space-x-2">
-                  <Calendar className="w-4 h-4" />
-                  <span>Start: {formatDate(job.startDate)}</span>
+              <div className="space-y-3">
+                <div className="flex items-center text-sm text-gray-600">
+                  <User className="w-4 h-4 mr-2" />
+                  {customer?.name || 'Unknown Customer'}
                 </div>
-              )}
-              {job.endDate && (
-                <div className="flex items-center space-x-2">
-                  <Clock className="w-4 h-4" />
-                  <span>End: {formatDate(job.endDate)}</span>
+                
+                <div className="flex items-center text-sm text-gray-600">
+                  <Clock className="w-4 h-4 mr-2" />
+                  {job.estimatedHours} hours estimated
                 </div>
-              )}
-            </div>
-
-            {/* Footer */}
-            <div className="flex items-center justify-between pt-4 mt-4 border-t border-gray-200 dark:border-gray-800">
-              <div className="text-sm text-gray-600 dark:text-gray-400">
-                {job.assignedTo && (
-                  <span>Assigned to {job.assignedTo}</span>
+                
+                <div className="flex items-center text-sm text-gray-600">
+                  <DollarSign className="w-4 h-4 mr-2" />
+                  ${job.hourlyRate}/hour • ${totalValue.toLocaleString()} total
+                </div>
+                
+                <div className="flex items-center text-sm text-gray-600">
+                  <Calendar className="w-4 h-4 mr-2" />
+                  Created {new Date(job.createdAt).toLocaleDateString()}
+                </div>
+                
+                {job.completedAt && (
+                  <div className="flex items-center text-sm text-green-600">
+                    <Calendar className="w-4 h-4 mr-2" />
+                    Completed {new Date(job.completedAt).toLocaleDateString()}
+                  </div>
                 )}
               </div>
-              <div className="flex items-center space-x-4">
-                <div className="flex items-center space-x-4 text-sm text-gray-500 dark:text-gray-500">
-                  <span>{job.materials.length} materials</span>
-                  <span>{job.laborHours}h labor</span>
-                </div>
-                <button
-                  onClick={() => onEditJob(job)}
-                  className="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg transition-colors"
-                >
-                  Edit
+
+              <div className="mt-6 flex space-x-2">
+                <button className="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-sm transition-colors">
+                  View Details
+                </button>
+                <button className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-lg text-sm transition-colors">
+                  Edit Job
                 </button>
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {filteredJobs.length === 0 && (
-        <div className="text-center py-12">
-          <div className="w-16 h-16 bg-gray-200 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Briefcase className="w-8 h-8 text-gray-500 dark:text-gray-500" />
-          </div>
-          <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No jobs found</h3>
-          <p className="text-gray-600 dark:text-gray-400">
-            {searchTerm ? 'Try adjusting your search terms' : 'Create your first job to get started'}
+        <div className="bg-white rounded-lg shadow-md p-12 text-center">
+          <Briefcase className="w-12 h-12 mx-auto mb-4 text-gray-300" />
+          <h3 className="text-lg font-medium text-gray-900 mb-2">No jobs found</h3>
+          <p className="text-gray-600 mb-4">
+            {searchTerm || statusFilter !== 'all' 
+              ? 'Try adjusting your search or filter criteria.'
+              : 'Get started by creating your first job.'
+            }
           </p>
+          <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors">
+            Create New Job
+          </button>
         </div>
       )}
     </div>
